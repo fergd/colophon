@@ -11,7 +11,7 @@ import { fixture, ROOT } from './helpers.ts';
 function files(dir: string): string[] {
   return readdirSync(dir).flatMap((n) => {
     const p = path.join(dir, n);
-    return statSync(p).isDirectory() ? (n === 'node_modules' ? [] : files(p)) : /\.ts$/.test(n) ? [p] : [];
+    return statSync(p).isDirectory() ? (n === 'node_modules' ? [] : files(p)) : n.endsWith('.ts') ? [p] : [];
   });
 }
 const imports = (file: string) => [...readFileSync(file, 'utf8').matchAll(/(?:^|\n)\s*(?:import|export)[^'"\n]*?from\s+['"]([^'"]+)['"]|import\(\s*['"]([^'"]+)['"]\s*\)/g)].map((m) => m[1] ?? m[2]!);

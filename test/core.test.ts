@@ -26,7 +26,7 @@ describe('the canonical form (SPEC §2)', () => {
     const value = fc.letrec((tie) => ({
       v: fc.oneof({ depthSize: 'small' }, fc.constant(null), fc.boolean(), fc.maxSafeInteger(), fc.string({ unit: 'grapheme' }), fc.array(tie('v'), { maxLength: 4 }), fc.dictionary(fc.string(), tie('v'), { maxKeys: 4 })),
     })).v as fc.Arbitrary<Json>;
-    await fc.assert(fc.property(fc.dictionary(fc.string(), value, { maxKeys: 6 }), (o) => {
+    fc.assert(fc.property(fc.dictionary(fc.string(), value, { maxKeys: 6 }), (o) => {
       const line = canonical(o);
       expect(JSON.parse(line)).toEqual(JSON.parse(JSON.stringify(o)));
       expect(isCanonical(line)).toBe(true);
