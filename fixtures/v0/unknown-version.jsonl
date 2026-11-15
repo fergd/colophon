@@ -1,0 +1,2 @@
+{"chain":"e018eda94310a7e4745eb7788bc66677","hash":"sha-256","how":"new","key":{"alg":"ecdsa-p256-sha256","pub":"BKXARMIA9nxfKpSl6gddRw59nkMmQFqA8sPT9xvxlEt9fTPDHccVJ6dY4fkGh3L_6cX6mYIy81jBk9oMQ_n4SGU"},"record":"cc8298eed815180e487e54d39dfed220","seq":0,"t":1782892800000,"type":"record.start","unit":"words","v":0,"words":0}
+{"app":{"name":"Example Writer","version":"1.0.0"},"m":0,"platform":"linux","prev":"8e79bd0c7279216ded5b78400426e21f640ad2649a44a2f8037e71309a1e9f39","seq":1,"t":1782892800000,"type":"session.start","v":7,"words":0}

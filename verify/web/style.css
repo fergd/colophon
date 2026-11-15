@@ -1,0 +1,20 @@
+:root { --bg: #fbfaf7; --text: #23211d; --dim: #5f5a50; --line: #d6d1c5; --panel: #f2efe8; color-scheme: light dark; }
+@media (prefers-color-scheme: dark) { :root { --bg: #1f1f1e; --text: #f1ede2; --dim: #b3ac9c; --line: #3c3a36; --panel: #2a2927; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 720px; margin: 0 auto; padding: 40px 16px 80px; }
+h1 { font-size: 28px; line-height: 1.2; margin: 0 0 12px; }
+.lede { color: var(--dim); margin: 0 0 24px; }
+#drop { display: block; border: 2px dashed var(--line); border-radius: 8px; padding: 32px 16px; text-align: center; background: var(--panel); cursor: pointer; }
+#drop[data-over] { border-color: var(--text); }
+#drop:focus-within { outline: 2px solid var(--text); outline-offset: 2px; }
+#files { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.field { display: grid; gap: 4px; margin: 16px 0 0; font-size: 14px; color: var(--dim); }
+.field input { font: 14px ui-monospace, Menlo, monospace; padding: 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--text); min-width: 0; }
+.given { font-size: 14px; color: var(--dim); overflow-wrap: anywhere; }
+#result { list-style: none; margin: 24px 0 0; padding: 0; }
+#result li { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.status { font-weight: 700; font-size: 13px; letter-spacing: .04em; text-transform: uppercase; padding-top: 3px; }
+#result li[data-status="failed"] .status { text-decoration: underline; }
+footer { margin-top: 40px; font-size: 14px; color: var(--dim); }
+@media (max-width: 520px) { #result li { grid-template-columns: minmax(0, 1fr); gap: 2px; } }

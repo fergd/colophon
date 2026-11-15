@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-__SCRIPT__'; style-src 'sha256-__STYLE__'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Record check</title>
+<style>__CSS__</style>
+</head>
+<body>
+<main>
+  <h1>Record check</h1>
+  <p class="lede">Drop a writing record here, with its manuscript if you have it. Everything is checked in this page. Nothing you drop leaves your computer: this page cannot make a network request.</p>
+  <label id="drop">
+    <input id="files" type="file" multiple>
+    <span>Drop the record and the manuscript here, or choose files</span>
+  </label>
+  <p class="field"><label for="head">An entry hash you were given earlier (optional)</label><input id="head" type="text" spellcheck="false" autocomplete="off"></p>
+  <p id="given" class="given"></p>
+  <ul id="result"></ul>
+  <footer>
+    <p>This check reports what holds and what doesn’t. It gives no verdict and no score. A record shows what a writing app wrote down, and that it existed by the times shown. It does not show who wrote a text, or that a person composed it.</p>
+    <p>Verifier <span id="version"></span>. Works offline: save this page and open it from your disk.</p>
+  </footer>
+</main>
+<script>__JS__</script>
+</body>
+</html>

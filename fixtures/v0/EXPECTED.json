@@ -1,0 +1,160 @@
+{
+  "backdated.jsonl": {
+    "exit": 0,
+    "failed": [],
+    "notes": [
+      "unsealed-tail"
+    ],
+    "anchors": [
+      "rfc3161:held"
+    ],
+    "chains": 1
+  },
+  "clean.jsonl": {
+    "exit": 0,
+    "failed": [],
+    "notes": [],
+    "anchors": [
+      "rfc3161:held",
+      "opentimestamps:pending"
+    ],
+    "chains": 1
+  },
+  "edited.jsonl": {
+    "exit": 1,
+    "failed": [
+      "broken@line4"
+    ],
+    "notes": [
+      "no-anchors",
+      "unsealed-tail"
+    ],
+    "anchors": [],
+    "chains": 1
+  },
+  "forked.jsonl": {
+    "exit": 1,
+    "failed": [
+      "fork@line16"
+    ],
+    "notes": [],
+    "anchors": [
+      "rfc3161:held",
+      "opentimestamps:pending"
+    ],
+    "chains": 1
+  },
+  "gap.jsonl": {
+    "exit": 0,
+    "failed": [],
+    "notes": [
+      "no-anchors"
+    ],
+    "anchors": [],
+    "chains": 1
+  },
+  "reordered.jsonl": {
+    "exit": 0,
+    "failed": [],
+    "notes": [
+      "out-of-order"
+    ],
+    "anchors": [
+      "rfc3161:held",
+      "opentimestamps:pending"
+    ],
+    "chains": 1
+  },
+  "spliced.jsonl": {
+    "exit": 1,
+    "failed": [
+      "broken@line3"
+    ],
+    "notes": [
+      "no-anchors",
+      "unsealed-tail"
+    ],
+    "anchors": [],
+    "chains": 1
+  },
+  "torn.jsonl": {
+    "exit": 0,
+    "failed": [],
+    "notes": [
+      "incomplete-last-line"
+    ],
+    "anchors": [
+      "rfc3161:held",
+      "opentimestamps:pending"
+    ],
+    "chains": 1
+  },
+  "truncated.jsonl": {
+    "exit": 1,
+    "failed": [
+      "head-missing"
+    ],
+    "notes": [
+      "manuscript-no-match"
+    ],
+    "anchors": [
+      "rfc3161:held",
+      "opentimestamps:pending"
+    ],
+    "chains": 1
+  },
+  "two-devices-cut.jsonl": {
+    "exit": 1,
+    "failed": [
+      "chain-cut-short@7"
+    ],
+    "notes": [
+      "no-anchors",
+      "unsealed-tail"
+    ],
+    "anchors": [],
+    "chains": 2
+  },
+  "two-devices.jsonl": {
+    "exit": 0,
+    "failed": [],
+    "notes": [
+      "no-anchors"
+    ],
+    "anchors": [
+      "test:unchecked"
+    ],
+    "chains": 2
+  },
+  "unknown-type.jsonl": {
+    "exit": 0,
+    "failed": [],
+    "notes": [
+      "key-changed-endorsed",
+      "no-anchors"
+    ],
+    "anchors": [],
+    "chains": 1
+  },
+  "unknown-version.jsonl": {
+    "exit": 2,
+    "failed": [],
+    "notes": [],
+    "anchors": [],
+    "chains": 0
+  },
+  "wrong-key.jsonl": {
+    "exit": 1,
+    "failed": [
+      "bad-signature@line15"
+    ],
+    "notes": [
+      "unsealed-tail"
+    ],
+    "anchors": [
+      "rfc3161:held",
+      "opentimestamps:pending"
+    ],
+    "chains": 1
+  }
+}
