@@ -1,5 +1,6 @@
 // The package stands alone (the brief's ground rules): it imports nothing outside itself, its core uses nothing a
-// browser lacks, and the whole verifier runs where there is no Node at all.
+// browser lacks, and the whole verifier runs where there is no Node at all. (That an app using it reaches only its
+// entry is the app's own test to keep: Baretext's is app/main/test/colophon-boundary.test.ts.)
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -29,13 +30,6 @@ describe('the package imports nothing outside itself', () => {
       const text = readFileSync(file, 'utf8').replace(/\/\/.*$/gm, ''); // (what the code does, not what its comments say)
       for (const spec of imports(file)) expect(spec.startsWith('.'), `${file} imports ${spec}`).toBe(true);
       expect(text, file).not.toMatch(/\b(Buffer|process|require|__dirname|__filename|globalThis\.process|setImmediate)\b(?!['’])/);
-    }
-  });
-
-  it('nothing else in this repository reaches into the package’s internals', () => {
-    const repo = path.join(ROOT, '..', '..');
-    for (const dir of ['app', 'packages/book', 'packages/design', 'packages/editor', 'packages/format', 'packages/import-docx']) {
-      for (const file of files(path.join(repo, dir))) for (const spec of imports(file)) expect(spec, `${file} imports ${spec}`).not.toMatch(/colophon\/(src\/core|src\/testing|test|scripts|verify)\//);
     }
   });
 });
