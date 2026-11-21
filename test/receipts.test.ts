@@ -2,7 +2,7 @@
 // FreeTSA for an entry of the clean fixture, and a complete proof from the OpenTimestamps client's own examples,
 // which reached Bitcoin block 912095 in August 2025. No test here uses the network.
 import { describe, expect, it } from 'vitest';
-import { parseLine, rootBytes, splitOtsFile, unbase64url, unhex, verifyOpenTimestamps, verifyRfc3161, hex, sha256, utf8 } from '../src/index.ts';
+import { completeOpenTimestamps, concat, parseLine, pendingRequests, rootBytes, splitOtsFile, unbase64url, unhex, verifyOpenTimestamps, verifyRfc3161, hex, sha256, utf8 } from '../src/index.ts';
 import { fixture, fixtureBytes } from './helpers.ts';
 
 const anchors = fixture('clean.jsonl').split('\n').filter(Boolean).map((l) => parseLine(l)!).filter((e) => e.type === 'anchor') as { scheme: string; proof: string; target: { hash: string } }[];
@@ -15,7 +15,7 @@ describe('an RFC 3161 receipt (SPEC §8.3)', () => {
     const r = await verifyRfc3161(token, target, rootBytes());
     expect(r).toMatchObject({ status: 'held', authority: 'www.freetsa.org' });
     if (r.status !== 'held') return;
-    expect(new Date(r.time).toISOString().slice(0, 10)).toBe('2026-11-12');
+    expect(new Date(r.time).toISOString().slice(0, 10)).toBe('2026-11-21');
     expect(r.expires).toBeGreaterThan(r.time);
   });
 
@@ -93,6 +93,32 @@ describe('an OpenTimestamps receipt (SPEC §8.3)', () => {
     const r = await verifyOpenTimestamps(unbase64url(pending.proof)!, unhex(pending.target.hash)!);
     expect(r.status).toBe('pending');
     if (r.status === 'pending') expect(r.calendars[0]).toContain('calendar.opentimestamps.org');
+  });
+
+  it('a pending receipt says what to ask its calendar; the answer completes it, and nothing else does', async () => {
+    // The genuine pending receipt: one request, to the calendar that issued it, for the commitment its path reaches.
+    const pending = anchors.find((a) => a.scheme === 'opentimestamps')!;
+    const [proof, target] = [unbase64url(pending.proof)!, unhex(pending.target.hash)!];
+    const requests = await pendingRequests(proof, target);
+    expect(requests).toHaveLength(1);
+    expect(requests[0]!.calendar).toContain('calendar.opentimestamps.org');
+    expect(requests[0]!.path.length).toBeGreaterThan(0);
+
+    // A receipt pending at the genuine proof's own digest: the calendar's answer is the genuine proof, and completing
+    // it gives exactly that proof, checked as far as Bitcoin block 912095.
+    const url = utf8('https://alice.btc.calendar.opentimestamps.org');
+    const att = concat(Uint8Array.of(0x00), unhex('83dfe30d2ef90c8e')!, Uint8Array.of(url.length + 1, url.length), url);
+    const [request] = await pendingRequests(att, split.digest);
+    expect(hex(request!.commitment)).toBe(hex(split.digest));
+    const done = await completeOpenTimestamps(request!, split.proof, split.digest);
+    expect(done && hex(done)).toBe(hex(split.proof));
+    expect((await verifyOpenTimestamps(done!, split.digest)).status).toBe('needs-header');
+
+    // An answer that is still pending, or nonsense, completes nothing. (One for another commitment reads as a path to
+    // a block whose root won't match it: only the block's header can show that, and the verifier asks for it.)
+    expect(await completeOpenTimestamps(request!, att, split.digest)).toBeNull();
+    expect(await completeOpenTimestamps(request!, Uint8Array.of(0xff, 0x00), split.digest)).toBeNull();
+    expect(await pendingRequests(Uint8Array.of(0xf0), target)).toEqual([]);
   });
 
   it('nonsense is refused without throwing', async () => {

@@ -1,6 +1,6 @@
 # Threat model
 
-*Format version 0, draft for review, 10 November 2026. "provenance" is a working name. Licensed CC BY 4.0.*
+*Format version 0, draft for review, 10 November 2026. Colophon is the format's name (chosen 21 November 2026). Licensed CC BY 4.0.*
 
 ## The short version
 

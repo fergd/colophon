@@ -11,5 +11,5 @@ export { Chain, newId, newSecret, type ChainPorts, type Written } from './chain.
 export { verify, exitStatus, VERIFIER, CLOCK_TOLERANCE_MS, BLOCK_SLACK_MS, type Result, type Finding, type Status, type VerifyInput, type ChainReport, type AnchorReport, type GapReport } from './verify.ts';
 export { describe, span, type Sentence } from './describe.ts';
 export { verifyRfc3161, type Rfc3161Result } from './anchors/rfc3161.ts';
-export { verifyOpenTimestamps, splitOtsFile, type OtsResult, type Headers, type BlockHeader } from './anchors/opentimestamps.ts';
+export { verifyOpenTimestamps, splitOtsFile, pendingRequests, completeOpenTimestamps, type OtsResult, type Headers, type BlockHeader, type PendingRequest } from './anchors/opentimestamps.ts';
 export { TRUSTED_ROOTS, ROOTS_DATED, rootBytes, type TrustedRoot } from './anchors/roots.ts';

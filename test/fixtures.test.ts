@@ -64,13 +64,13 @@ describe('the fixtures of format version 0', () => {
     expect(r.failed).toBe(false);
     const day = (t: number) => new Date(t).toISOString().slice(0, 10);
     // The computer's clock claims six months; the only outside evidence is one receipt, from the day it was made.
-    expect(day(r.time.claimedFrom!)).toBe('2026-05-14');
-    expect(day(r.time.anchoredFrom!)).toBe('2026-11-12');
+    expect(day(r.time.claimedFrom!)).toBe('2026-05-23');
+    expect(day(r.time.anchoredFrom!)).toBe('2026-11-21');
     expect(r.time.anchoredTo).toBe(r.time.anchoredFrom);
     expect(r.time.longestUnanchored!.ms).toBeGreaterThan(100 * 86_400_000);
     const said = say(r).map((s) => s.text).join('\n');
-    expect(said).toContain('The computer’s clock says this record covers 14 May 2026');
-    expect(said).toContain('Outside evidence covers 12 November 2026');
+    expect(said).toContain('The computer’s clock says this record covers 23 May 2026');
+    expect(said).toContain('Outside evidence covers 21 November 2026');
     expect(said).toMatch(/The longest stretch with no outside timestamp is 1\d\d days/);
   });
 

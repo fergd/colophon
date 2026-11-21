@@ -138,5 +138,5 @@ export const PASTES_LISTED = 50;
 
 /** What a seal signs (SPEC §7.2): the chain so far, and where in it the seal stands. ASCII. */
 export function sealMessage(seal: { prev: string; seq: number; t: number; m?: number; key?: string }): string {
-  return `provenance-seal-v0:${seal.prev}:${seal.seq}:${seal.t}:${seal.m ?? ''}:${seal.key ?? ''}`;
+  return `colophon-seal-v0:${seal.prev}:${seal.seq}:${seal.t}:${seal.m ?? ''}:${seal.key ?? ''}`;
 }

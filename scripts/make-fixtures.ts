@@ -1,7 +1,7 @@
 // Makes the test records in fixtures/v0. RUN ONCE PER FORMAT VERSION: once a version is released its fixtures are
 // frozen and never made again (SPEC §12); a test fails if any of them changes. Version 0 is not released yet.
 //
-//   node packages/provenance/scripts/make-fixtures.ts
+//   node packages/colophon/scripts/make-fixtures.ts
 //
 // This is the only code in the package that uses the network: it asks FreeTSA for two genuine RFC 3161 receipts and
 // an OpenTimestamps calendar for one pending receipt, each for a bare hash of a test entry.
@@ -209,8 +209,9 @@ async function main() {
   }
 
   // ── write them, with what the verifier of this day says about each ──
-  rmSync(OUT, { recursive: true, force: true });
+  // (every file made here goes first; the folder's README, written by hand, stays)
   mkdirSync(OUT, { recursive: true });
+  for (const name of readdirSync(OUT)) if (name !== 'README.md') rmSync(path.join(OUT, name), { recursive: true, force: true });
   for (const [name, content] of Object.entries(written)) writeFileSync(path.join(OUT, name), content);
   const expected: { [name: string]: unknown } = {};
   for (const name of Object.keys(written).filter((x) => x.endsWith('.jsonl')).sort()) {

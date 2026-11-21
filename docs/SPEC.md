@@ -1,6 +1,6 @@
 # The record format, version 0
 
-*Draft for review, 10 November 2026. "provenance" is a working name; the format's public name is not chosen. Licensed CC BY 4.0. Read `THREAT_MODEL.md` first: it says what a record is evidence of. This document says how one is built and checked.*
+*Draft for review, 10 November 2026. Its name is **Colophon** (chosen 21 November 2026): in a book, the colophon is the note that says how it was made. Licensed CC BY 4.0. Read `THREAT_MODEL.md` first: it says what a record is evidence of. This document says how one is built and checked.*
 
 **Status:** version 0 is not frozen. It freezes on the day a build that writes it reaches any writer. From then on, nothing in this document may change in a way that alters how a version 0 record is read.
 
@@ -241,7 +241,7 @@ Unsalted on purpose: its job is to let anyone holding a manuscript confirm it is
 
 The host cuts the manuscript into an ordered list of **parts**, each with a stable identifier (1 to 64 ASCII characters) and its bytes. How it cuts is the host's **profile**, named in `session.start` (for example `"baretext-md-1"`: one part per scene, in manuscript order). The profile must be published so that others can recompute it. The file hash covers every byte whether or not parts do.
 
-- Salt for a part: `HMAC-SHA-256(secret, "provenance-part-v0:" ‖ id)`, 32 bytes, where `secret` is 32 random bytes belonging to the chain.
+- Salt for a part: `HMAC-SHA-256(secret, "colophon-part-v0:" ‖ id)`, 32 bytes, where `secret` is 32 random bytes belonging to the chain.
 - Leaf data: `salt ‖ len(id) as one byte ‖ id ‖ content bytes`.
 - The tree is the Merkle Tree Hash of RFC 6962 §2.1 over the leaf data in manuscript order: leaves are hashed with a 0x00 prefix, inner nodes with 0x01, and an odd-sized list splits at the largest power of two below its size. An empty list has no `root`.
 
@@ -293,7 +293,7 @@ Members: `sig`, and optionally `key` (a fingerprint; default: the chain's curren
 
 The signature is over the ASCII bytes of
 
-`provenance-seal-v0:` *prev* `:` *seq* `:` *t* `:` *m* `:` *key*
+`colophon-seal-v0:` *prev* `:` *seq* `:` *t* `:` *m* `:` *key*
 
 where each part is the seal's own member as written (decimal for numbers; empty for an absent `m` or `key`). Because `prev` commits to every earlier entry, one seal covers the whole chain before it; because its own position and times are signed too, a seal that is the last line of a record cannot be altered without it showing. `sig` must be the one base64url spelling of its bytes.
 
@@ -537,7 +537,7 @@ Item 4 is settled as "reword the tests". Item 1 is settled as "continue the exis
 13. **Activity rows are batched until the next checkpoint** (§5.4). A crash can lose up to five minutes of counts, recorded as a gap. Writing a line a minute loses nothing and costs 6.6 MB more. *Recommend:* batch.
 14. **No hardware attestation.** Version 0 cannot show that a key is held where only the genuine app can use it; forum reports say Apple's App Attest is not supported on the Mac. *Recommend:* test this in phase 2 on a signed build before designing anything around it.
 15. **RFC 3161 and OpenTimestamps parsing written in this package**, not taken from a library. I found no small, audited JavaScript library for either. Everything else uses WebCrypto (SHA-256, HMAC, ECDSA P-256, Ed25519, RSA), so the package would have **no runtime dependencies**. Ed25519 in WebCrypto needs Chrome 137, Firefox 129 or Safari 17. *Recommend:* write the two parsers (small, bounded, property-tested, checked against genuine receipts) and name them as the first thing for the outside security review.
-16. **The format's public name.** Yours to choose; the string `provenance-seal-v0:` and `provenance-part-v0:` are signed and hashed into every record, so if the name should appear there, it has to be chosen before version 0 freezes.
+16. **The format's public name.** *Answered 21 November 2026: Colophon; the signed strings are `colophon-seal-v0:` and `colophon-part-v0:`, and an exported record's file is `*.colophon`.* Yours to choose; the string `provenance-seal-v0:` and `provenance-part-v0:` are signed and hashed into every record, so if the name should appear there, it has to be chosen before version 0 freezes.
 
 ## 16. What building it changed (Part B, 12 November 2026)
 

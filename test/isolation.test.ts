@@ -35,20 +35,20 @@ describe('the package imports nothing outside itself', () => {
   it('nothing else in this repository reaches into the package’s internals', () => {
     const repo = path.join(ROOT, '..', '..');
     for (const dir of ['app', 'packages/book', 'packages/design', 'packages/editor', 'packages/format', 'packages/import-docx']) {
-      for (const file of files(path.join(repo, dir))) for (const spec of imports(file)) expect(spec, `${file} imports ${spec}`).not.toMatch(/provenance\/(src\/core|src\/testing|test|scripts|verify)\//);
+      for (const file of files(path.join(repo, dir))) for (const spec of imports(file)) expect(spec, `${file} imports ${spec}`).not.toMatch(/colophon\/(src\/core|src\/testing|test|scripts|verify)\//);
     }
   });
 });
 
 describe('the verifier runs with no Node', () => {
   it('bundled for a browser and run where only web globals exist, it checks a record and reads a genuine receipt', async () => {
-    const out = await build({ entryPoints: [path.join(ROOT, 'src', 'index.ts')], bundle: true, format: 'iife', globalName: 'provenance', platform: 'browser', target: 'es2022', write: false });
+    const out = await build({ entryPoints: [path.join(ROOT, 'src', 'index.ts')], bundle: true, format: 'iife', globalName: 'colophon', platform: 'browser', target: 'es2022', write: false });
     // A fresh realm: the language's own objects, plus the five web globals the core uses. No process, Buffer or require.
     const context = vm.createContext({ crypto: webcrypto, TextEncoder, TextDecoder, btoa, atob });
     expect(vm.runInContext('typeof process + typeof Buffer + typeof require + typeof module', context)).toBe('undefinedundefinedundefinedundefined');
     vm.runInContext(out.outputFiles[0]!.text, context);
     context.text = fixture('clean.jsonl');
-    const r = JSON.parse(await vm.runInContext('provenance.verify({ files: [{ name: "clean.jsonl", text }] }).then((r) => JSON.stringify({ failed: r.failed, anchors: r.anchors.map((a) => a.status), codes: r.findings.map((f) => f.code), said: provenance.describe(r).length }))', context) as string) as { failed: boolean; anchors: string[]; codes: string[]; said: number };
+    const r = JSON.parse(await vm.runInContext('colophon.verify({ files: [{ name: "clean.jsonl", text }] }).then((r) => JSON.stringify({ failed: r.failed, anchors: r.anchors.map((a) => a.status), codes: r.findings.map((f) => f.code), said: colophon.describe(r).length }))', context) as string) as { failed: boolean; anchors: string[]; codes: string[]; said: number };
     expect(r.failed).toBe(false);
     expect(r.anchors).toEqual(['held', 'pending']);
     expect(r.codes).toEqual(expect.arrayContaining(['chain-intact', 'signed']));

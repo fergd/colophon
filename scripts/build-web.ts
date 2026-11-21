@@ -1,7 +1,7 @@
 // Builds verify/web/verify.html: one file holding the whole verifier, which checks a dropped record in the page.
 // Its Content-Security-Policy names the hashes of its own script and style and allows nothing else: no network.
 //
-//   node packages/provenance/scripts/build-web.ts
+//   node packages/colophon/scripts/build-web.ts
 
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';

@@ -10,10 +10,10 @@ export interface Part {
   content: Uint8Array;
 }
 
-const SALT_LABEL = 'provenance-part-v0:';
+const SALT_LABEL = 'colophon-part-v0:';
 const validId = (id: string) => /^[\x21-\x7e]{1,64}$/.test(id);
 
-/** A part's salt: HMAC-SHA-256(secret, "provenance-part-v0:" ‖ id). The same for a part at every checkpoint. */
+/** A part's salt: HMAC-SHA-256(secret, "colophon-part-v0:" ‖ id). The same for a part at every checkpoint. */
 export async function partSalt(secret: Uint8Array<ArrayBuffer>, id: string): Promise<Uint8Array<ArrayBuffer>> {
   if (secret.length !== 32) throw new Error('the secret is 32 bytes');
   if (!validId(id)) throw new Error('a part id is 1 to 64 printable ASCII characters');

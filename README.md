@@ -1,6 +1,6 @@
-# provenance
+# Colophon
 
-*A working name. Format version 0 is a draft: it is not frozen, has no public name yet, and has not had an outside security review. Nothing here should be used to make a public claim.*
+*Colophon: in a book, the note that says how it was made. Format version 0 is a draft: it is not frozen and has not had an outside security review. Nothing here should be used to make a public claim.*
 
 A writing app can keep a **record** of how a text was written: when it was worked on, how the words arrived (typed, pasted, imported, moved, cut), and a fingerprint of the manuscript at each save. This package is that record's format, a library that writes and checks it, and two verifiers anyone can run.
 

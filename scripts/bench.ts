@@ -2,7 +2,7 @@
 // 400 scenes. Phase 2 holds these against the save pipeline's 52 ms. Storage is memory: a real append adds one
 // write and sync.
 //
-//   node packages/provenance/scripts/bench.ts [path to a large manuscript]
+//   node packages/colophon/scripts/bench.ts [path to a large manuscript]
 
 import { readFileSync } from 'node:fs';
 import { Chain, partLeaf, sha256, utf8, type Part } from '../src/index.ts';

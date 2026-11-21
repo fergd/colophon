@@ -68,10 +68,24 @@ class Reader {
 }
 
 interface Attestation { kind: 'bitcoin'; height: number; message: Uint8Array }
-interface Found { bitcoin: Attestation[]; pending: string[]; steps: number }
+/** A calendar's promise still to be kept: ask `calendar` about `commitment`; its answer continues the path. */
+export interface PendingRequest {
+  calendar: string;
+  /** The message the path reaches at the pending attestation: what the calendar committed to. */
+  commitment: Uint8Array<ArrayBuffer>;
+  /** The operations from the anchored hash to the commitment, serialized as in a receipt. */
+  path: Uint8Array<ArrayBuffer>;
+}
+interface Found { bitcoin: Attestation[]; pending: string[]; requests: PendingRequest[]; steps: number }
+
+function varint(n: number): Uint8Array<ArrayBuffer> {
+  const out: number[] = [];
+  do { let b = n % 128; n = Math.floor(n / 128); if (n) b |= 0x80; out.push(b); } while (n);
+  return Uint8Array.from(out);
+}
 
 /** Walk a timestamp from `message`, applying each operation, and collect what it attests. */
-async function walk(r: Reader, message: Uint8Array<ArrayBuffer>, found: Found): Promise<void> {
+async function walk(r: Reader, message: Uint8Array<ArrayBuffer>, found: Found, path: Uint8Array<ArrayBuffer> = new Uint8Array(0)): Promise<void> {
   // (a timestamp is one or more branches: every branch but the last is marked 0xff)
   for (;;) {
     if (++found.steps > MAX_STEPS) throw new Malformed('too many steps');
@@ -82,16 +96,24 @@ async function walk(r: Reader, message: Uint8Array<ArrayBuffer>, found: Found): 
       const kind = hex(r.take(8));
       const payload = new Reader(r.varbytes(8192));
       if (kind === BITCOIN) found.bitcoin.push({ kind: 'bitcoin', height: payload.varint(), message });
-      else if (kind === PENDING) found.pending.push(new TextDecoder().decode(payload.varbytes(1000)).replace(/[^\x21-\x7e]/g, ''));
+      else if (kind === PENDING) {
+        const calendar = new TextDecoder().decode(payload.varbytes(1000)).replace(/[^\x21-\x7e]/g, '');
+        found.pending.push(calendar);
+        found.requests.push({ calendar, commitment: message, path });
+      }
       // (an attestation of a kind this verifier doesn't know is passed over)
     } else {
       let next: Uint8Array<ArrayBuffer>;
-      if (tag === 0x08) next = await sha256(message);
-      else if (tag === 0xf0) next = concat(message, r.varbytes());
-      else if (tag === 0xf1) next = concat(r.varbytes(), message);
+      let op: Uint8Array<ArrayBuffer>;
+      if (tag === 0x08) { next = await sha256(message); op = Uint8Array.of(0x08); }
+      else if (tag === 0xf0 || tag === 0xf1) {
+        const arg = r.varbytes();
+        next = tag === 0xf0 ? concat(message, arg) : concat(arg, message);
+        op = concat(Uint8Array.of(tag), varint(arg.length), arg);
+      }
       else throw new Unsupported('the receipt uses an operation this verifier does not handle');
       if (next.length > MAX_MESSAGE) throw new Malformed('too long');
-      await walk(r, next, found);
+      await walk(r, next, found, concat(path, op));
     }
     if (!more) return;
   }
@@ -112,7 +134,7 @@ export function splitOtsFile(file: Uint8Array<ArrayBuffer>): { digest: Uint8Arra
  * without a `.ots` file's header and digest.
  */
 export async function verifyOpenTimestamps(proof: Uint8Array<ArrayBuffer>, hash: Uint8Array<ArrayBuffer>, headers?: Headers): Promise<OtsResult> {
-  const found: Found = { bitcoin: [], pending: [], steps: 0 };
+  const found: Found = { bitcoin: [], pending: [], requests: [], steps: 0 };
   try {
     const r = new Reader(proof);
     await walk(r, hash, found);
@@ -136,4 +158,28 @@ export async function verifyOpenTimestamps(proof: Uint8Array<ArrayBuffer>, hash:
     return { status: 'held', time: header.time * 1000, height: b.height };
   }
   return first!;
+}
+
+/**
+ * A pending receipt's open requests (SPEC §8.1, `replaces`): for each calendar that promised to reach Bitcoin, what to
+ * ask it about. Empty when there are none, or the receipt can't be read.
+ */
+export async function pendingRequests(proof: Uint8Array<ArrayBuffer>, hash: Uint8Array<ArrayBuffer>): Promise<PendingRequest[]> {
+  const found: Found = { bitcoin: [], pending: [], requests: [], steps: 0 };
+  try {
+    const r = new Reader(proof);
+    await walk(r, hash, found);
+    return r.done ? found.requests : [];
+  } catch { return []; }
+}
+
+/**
+ * The completed receipt: the path to a pending request's commitment followed by the calendar's answer (its timestamp
+ * from the commitment). Null unless the result reaches a Bitcoin block: an answer that is still pending, or that
+ * doesn't read, completes nothing. The completed receipt carries only this calendar's branch.
+ */
+export async function completeOpenTimestamps(request: PendingRequest, answer: Uint8Array<ArrayBuffer>, hash: Uint8Array<ArrayBuffer>): Promise<Uint8Array<ArrayBuffer> | null> {
+  const proof = concat(request.path, answer);
+  const r = await verifyOpenTimestamps(proof, hash);
+  return r.status === 'needs-header' || r.status === 'held' ? proof : null;
 }
