@@ -1,6 +1,6 @@
 # Open Web Foundation Final Specification Agreement (OWFa 1.0) for Colophon
 
-*The agreement's text below is the Open Web Foundation's, unchanged, as published at <https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0> (copied 22 November 2026). Only the specification is filled in. **Not yet signed.***
+*The agreement's text below is the Open Web Foundation's, unchanged, as published at <https://www.openwebfoundation.org/the-agreements/the-owf-1-0-agreements-granted-claims/owfa-1-0> (copied 22 November 2026). The specification and the signature are filled in.*
 
 **The Specification:** Colophon, record format version 0, as published in `docs/SPEC.md` of <https://github.com/fergd/colophon>.
 
@@ -74,11 +74,11 @@ If signing this OWFa as an individual:
 
 I acknowledge that, depending upon local law or contractual agreements, when I am employed by or acting on behalf of another entity, the promises I make relating to this Specification may actually be obligations of that other entity. In such a situation, I represent that I have been authorized by that entity to make these promises. I also understand that certain Specification projects may require additional private identifying information or certifications from me before they accept this Agreement.
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+/s/ Christan J. Fergus
 
 Signed name
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+Christan J. Fergus
 
 Print name
 
@@ -86,7 +86,7 @@ Print name
 
 Email address
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+22 November 2026
 
 Date
 
