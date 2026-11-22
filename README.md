@@ -75,3 +75,13 @@ None at run time. Hashing, signatures and RSA/ECDSA verification are the platfor
 ## Licence
 
 Code: Apache-2.0 ([`LICENSE`](LICENSE)). The documents in `docs/`: CC BY 4.0.
+
+## Patents
+
+Apache-2.0 includes a patent licence for the code in this repository. So that you can also write your own implementation of the format from the specification alone, without using this code, the specification is offered under the Open Web Foundation's **Final Specification Agreement, OWFa 1.0 (Patent and Copyright Grants)**, signed by its author: [`OWFa-1.0.md`](OWFa-1.0.md).
+
+In short, and the agreement itself is what counts: the author promises not to assert any patent claims they hold, now or later, against anyone implementing the specification; the promise covers an implementation that implements all of the specification's required parts, and only those parts; it ends for anyone who sues claiming that implementing the specification infringes their patents. It says nothing about patents held by others.
+
+## The name
+
+"Colophon" is this format's name. The licences cover the code and the documents, not the name. Implement the format, fork it, adapt it: all welcome. Saying that your software "writes Colophon records" or "checks Colophon records" when it follows the specification is welcome too. Please don't call a changed version of the format "Colophon", or suggest that this project endorses your software, without asking first.
